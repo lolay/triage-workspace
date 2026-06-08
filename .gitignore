@@ -1,0 +1,27 @@
+# triage-workspace .gitignore — allowlist strategy
+#
+# `/*` is non-recursive: it ignores everything at the workspace root, then
+# individual entries below un-ignore the files the workspace itself tracks.
+# This means:
+#   - Every checked-out child repo (triage/, triage-action/, ...) is ignored.
+#   - Every git worktree sibling (triage-foo/, triage-bar/, ...) is ignored
+#     automatically — no maintenance needed as branches come and go.
+#   - Every other local artifact (.DS_Store, .scratch/, ...) is ignored
+#     without being listed explicitly.
+#
+# If you add a new tracked file or directory at the workspace root, add a
+# corresponding `!/name` line below.
+
+/*
+
+!/.gitignore
+!/README.md
+!/Makefile
+!/Makefile.md
+!/AGENTS.md
+!/CONTRIBUTING.md
+!/CHANGELOG.md
+!/LICENSE
+!/repos.mk
+!/triage.code-workspace
+!/.cursor/
