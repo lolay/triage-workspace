@@ -28,10 +28,14 @@ include repos.mk
 _REPO_SPECS := $(foreach r,$(REPOS),$r:$(REPO_URL.$r):$(REPO_BRANCH.$r))
 
 .PHONY: help init doctor build ci pre-commit clean \
-        git-fetch git-pull git-push git-status
+        git-fetch git-pull git-push git-status \
+        gh-runs-list gh-runs-watch
 
 # MODE selects the doctor config in each child repo (default | release).
 MODE ?= default
+
+# Maximum recent runs to fetch for gh-runs-list / gh-runs-watch.
+GH_LIMIT ?= 50
 
 ##@ Develop
 
@@ -178,6 +182,28 @@ clean: ## Run `make clean` in repos that define the target
 	    $(MAKE) -C "$$r" clean; \
 	  else \
 	    printf '  \033[33m⚠\033[0m %s not checked out; skipping\n' "$$r" >&2; \
+	  fi; \
+	done; \
+	echo ""
+
+##@ GitHub
+
+gh-runs-list: ## List in-flight Actions runs across all repos (status != completed)
+	@for r in $(REPOS); do \
+	  if [ -d "$$r/.git" ]; then \
+	    echo ""; \
+	    printf '\033[1m==> %s\033[0m\n' "$$r"; \
+	    $(MAKE) -C "$$r" gh-runs-list GH_LIMIT=$(GH_LIMIT); \
+	  fi; \
+	done; \
+	echo ""
+
+gh-runs-watch: ## Watch in-flight Actions runs across all repos until each completes
+	@for r in $(REPOS); do \
+	  if [ -d "$$r/.git" ]; then \
+	    echo ""; \
+	    printf '\033[1m==> %s\033[0m\n' "$$r"; \
+	    $(MAKE) -C "$$r" gh-runs-watch GH_LIMIT=$(GH_LIMIT); \
 	  fi; \
 	done; \
 	echo ""
