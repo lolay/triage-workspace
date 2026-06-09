@@ -23,7 +23,7 @@ make doctor    # health check: repo roster + system tools
 | Repo | Purpose | Stack | Status |
 |------|---------|-------|--------|
 | [`lolay/triage`](https://github.com/lolay/triage) | Environment doctor CLI — reads `triage.yaml` and reports missing tools, versions, env vars, files, and auth probes | Go | Active |
-| `lolay/triage-action` | GitHub Action wrapper — installs the `triage` CLI from release assets and runs a profile; Marketplace-eligible composite action | bash | Planned (m6) |
+| [`lolay/triage-action`](https://github.com/lolay/triage-action) | GitHub Action wrapper — installs the `triage` CLI from release assets and runs a profile; Marketplace-eligible composite action | bash | Active |
 | `lolay/triage-secrets` | Git-style plugin for secret/credential readiness checks (`triage-secrets` on `PATH`) | TBD | Planned |
 
 ## Dependency map

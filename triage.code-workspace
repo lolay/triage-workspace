@@ -1,14 +1,14 @@
 {
   "folders": [
     { "name": "workspace", "path": "." },
-    { "path": "triage" }
-    // { "path": "triage-action" },    // uncomment when triage-action is cloned (m6)
+    { "path": "triage" },
+    { "path": "triage-action" }
     // { "path": "triage-secrets" }    // uncomment when triage-secrets is cloned
   ],
   "settings": {
     "files.exclude": {
-      "triage": true
-      // "triage-action": true,        // uncomment when triage-action is cloned
+      "triage": true,
+      "triage-action": true
       // "triage-secrets": true        // uncomment when triage-secrets is cloned
     }
   }

@@ -13,6 +13,9 @@ repo's own CHANGELOG.md, not here.
 
 ### Added
 
+- Registered `triage-action` in the workspace manifest (`repos.mk`), IDE workspace
+  file, and estate table — the m6 composite action repo is now a first-class
+  child of `triage-workspace`.
 - Initial workspace scaffold: `Makefile` (`init`, `doctor`, `build`, `ci`,
   `pre-commit`, `clean`, `git-status`, `git-fetch`, `git-pull`, `git-push`),
   `repos.mk` manifest (triage live; triage-action and triage-secrets as
