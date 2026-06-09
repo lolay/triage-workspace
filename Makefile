@@ -29,7 +29,7 @@ _REPO_SPECS := $(foreach r,$(REPOS),$r:$(REPO_URL.$r):$(REPO_BRANCH.$r))
 
 .PHONY: help init doctor build ci pre-commit clean \
         git-fetch git-pull git-push git-status \
-        gh-runs-list gh-runs-watch
+        gh-runs-list gh-runs-watch gh-runs-status
 
 # MODE selects the doctor config in each child repo (default | release).
 MODE ?= default
@@ -204,6 +204,16 @@ gh-runs-watch: ## Watch in-flight Actions runs across all repos until each compl
 	    echo ""; \
 	    printf '\033[1m==> %s\033[0m\n' "$$r"; \
 	    $(MAKE) -C "$$r" gh-runs-watch GH_LIMIT=$(GH_LIMIT); \
+	  fi; \
+	done; \
+	echo ""
+
+gh-runs-status: ## Show pass/fail of the last completed run per workflow across all repos
+	@for r in $(REPOS); do \
+	  if [ -d "$$r/.git" ]; then \
+	    echo ""; \
+	    printf '\033[1m==> %s\033[0m\n' "$$r"; \
+	    $(MAKE) -C "$$r" gh-runs-status GH_LIMIT=$(GH_LIMIT); \
 	  fi; \
 	done; \
 	echo ""
