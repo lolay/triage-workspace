@@ -38,3 +38,10 @@ REPOS_MAKE_CI := triage triage-action
 
 # Repos that have a `make clean` target
 REPOS_MAKE_CLEAN := triage triage-action
+
+# Generated / follow-only mirrors (skipped on push, tagged in roster).
+# None in this estate today.
+REPOS_FOLLOW_ONLY :=
+
+# Repos with GitHub Actions workflows (gh-runs-* delegation)
+REPOS_GH := $(filter-out $(REPOS_FOLLOW_ONLY),$(REPOS))

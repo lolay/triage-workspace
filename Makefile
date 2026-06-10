@@ -40,7 +40,7 @@ GH_LIMIT ?= 50
 ##@ Develop
 
 help: ## Show this help
-	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z_-]+:.*?##/ {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2} /^##@/ {printf "\n\033[1m%s\033[0m\n", substr($$0,5)}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z0-9_.-]+:.*?##/ {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2} /^##@/ {printf "\n\033[1m%s\033[0m\n", substr($$0,5)}' $(MAKEFILE_LIST)
 
 init: ## Clone missing repos, run per-repo `make init`, then check environment
 	@set -euo pipefail; \
@@ -186,38 +186,6 @@ clean: ## Run `make clean` in repos that define the target
 	done; \
 	echo ""
 
-##@ GitHub
-
-gh-runs-list: ## List in-flight Actions runs across all repos (status != completed)
-	@for r in $(REPOS); do \
-	  if [ -d "$$r/.git" ]; then \
-	    echo ""; \
-	    printf '\033[1m==> %s\033[0m\n' "$$r"; \
-	    $(MAKE) -C "$$r" gh-runs-list GH_LIMIT=$(GH_LIMIT); \
-	  fi; \
-	done; \
-	echo ""
-
-gh-runs-watch: ## Watch in-flight Actions runs across all repos until each completes
-	@for r in $(REPOS); do \
-	  if [ -d "$$r/.git" ]; then \
-	    echo ""; \
-	    printf '\033[1m==> %s\033[0m\n' "$$r"; \
-	    $(MAKE) -C "$$r" gh-runs-watch GH_LIMIT=$(GH_LIMIT); \
-	  fi; \
-	done; \
-	echo ""
-
-gh-runs-status: ## Show pass/fail of the last completed run per workflow across all repos
-	@for r in $(REPOS); do \
-	  if [ -d "$$r/.git" ]; then \
-	    echo ""; \
-	    printf '\033[1m==> %s\033[0m\n' "$$r"; \
-	    $(MAKE) -C "$$r" gh-runs-status GH_LIMIT=$(GH_LIMIT); \
-	  fi; \
-	done; \
-	echo ""
-
 ##@ Git
 
 git-status: ## git status -s across the workspace and all checked-out repos
@@ -277,3 +245,32 @@ git-pull: ## git pull --ff-only across workspace and repos (skips dirty or diver
 	  fi; \
 	done; \
 	echo ""
+
+##@ GitHub
+
+gh-runs-list: ## List in-flight Actions runs across all repos (delegates to each repo)
+	@echo ""; \
+	for r in $(REPOS_GH); do \
+	  [ -d "$$r/.git" ] || continue; \
+	  printf '\033[1m==> %s\033[0m\n' "$$r"; \
+	  $(MAKE) --no-print-directory -C "$$r" gh-runs-list GH_LIMIT=$(GH_LIMIT) || true; \
+	  echo ""; \
+	done
+
+gh-runs-watch: ## Watch in-flight Actions runs across all repos (delegates to each repo)
+	@echo ""; \
+	for r in $(REPOS_GH); do \
+	  [ -d "$$r/.git" ] || continue; \
+	  printf '\033[1m==> %s\033[0m\n' "$$r"; \
+	  $(MAKE) --no-print-directory -C "$$r" gh-runs-watch GH_LIMIT=$(GH_LIMIT) || true; \
+	  echo ""; \
+	done
+
+gh-runs-status: ## Show pass/fail of the last completed run per workflow across all repos
+	@echo ""; \
+	for r in $(REPOS_GH); do \
+	  [ -d "$$r/.git" ] || continue; \
+	  printf '\033[1m==> %s\033[0m\n' "$$r"; \
+	  $(MAKE) --no-print-directory -C "$$r" gh-runs-status GH_LIMIT=$(GH_LIMIT) || true; \
+	  echo ""; \
+	done

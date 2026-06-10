@@ -55,6 +55,19 @@ pass-through (each repo's gate runs independently; no ordering assumed).
 | `git-pull` | `git pull --ff-only` across workspace + repos; skips dirty or diverged |
 | `git-push` | `git push` across workspace + repos; warns on failure |
 
+### GitHub
+
+| Target | Description |
+|--------|-------------|
+| `gh-runs-list` | List in-flight Actions runs across repos in `REPOS_GH` |
+| `gh-runs-watch` | Watch in-flight Actions runs across repos in `REPOS_GH` |
+| `gh-runs-status` | Last completed run per workflow across repos in `REPOS_GH` |
+
+Each `gh-runs-*` target delegates to the child repo's own target with
+`$(MAKE) --no-print-directory -C <repo> ... || true` — one repo's failure
+(e.g. `gh` auth) never aborts the sweep. `GH_LIMIT` (default 50) caps how
+many recent runs are fetched per repo.
+
 ## `make init` — idempotent bootstrap
 
 `make init` is safe to re-run at any time. For each repo in [`repos.mk`](./repos.mk):
@@ -142,7 +155,19 @@ aborts the rest.
 derive their repo list from the variables defined there. To add a repo, uncomment
 its entry in `repos.mk` and keep the list variables consistent
 (`REPOS`, `REPOS_MAKE_INIT`, `REPOS_BUILD_ORDER`, `REPOS_MAKE_CI`,
-`REPOS_MAKE_CLEAN`).
+`REPOS_MAKE_CLEAN`, `REPOS_FOLLOW_ONLY`, `REPOS_GH`).
+
+| Variable | Purpose |
+|----------|---------|
+| `REPOS` | All repo directory names (as cloned) |
+| `REPO_URL.<dir>` | Expected `origin` URL for roster checks and clone |
+| `REPO_BRANCH.<dir>` | Default branch for `git clone --branch` |
+| `REPOS_MAKE_INIT` | Repos whose `make init` the workspace invokes |
+| `REPOS_BUILD_ORDER` | Strict dependency order for `make build` |
+| `REPOS_MAKE_CI` | Repos in `make ci` / `make pre-commit` pass-through |
+| `REPOS_MAKE_CLEAN` | Repos that define `make clean` |
+| `REPOS_FOLLOW_ONLY` | Generated mirrors; skipped on push (none today) |
+| `REPOS_GH` | Repos with Actions workflows (`gh-runs-*` delegation) |
 
 ## Worktree convention
 
