@@ -13,6 +13,8 @@ repo's own CHANGELOG.md, not here.
 
 ### Changed
 
+- README points to the agent state machine (canonical doc in
+  `triage/.github/AGENT_TRIAGE.md`) that `triage` and `triage-action` now run.
 - README documents the Renovate setup: `triage` and `triage-action` share
   one preset, and `triage-action`'s `VERSION` follows `triage` releases;
   Prerequisites points at `make install-tools` for the pinned golangci-lint.

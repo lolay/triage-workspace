@@ -37,6 +37,11 @@ triage  ──(release assets)──►  triage-action
 as soon as the CLI releases. Both repos share one Renovate preset,
 `lolay/triage/.github/renovate-shared.json`.
 
+Both repos also run the agent state machine ported from `lolay/nowline`
+(issue → triage → plan → Copilot implementation → review, plus a Copilot autofix
+for failing Renovate PRs). The canonical reference is
+[`triage/.github/AGENT_TRIAGE.md`](https://github.com/lolay/triage/blob/main/.github/AGENT_TRIAGE.md).
+
 Build order for `make build`: `triage` only (it produces the binary; action and
 secrets repos have no build step, only lint/test).
 
