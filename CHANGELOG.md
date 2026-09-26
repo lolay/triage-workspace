@@ -13,6 +13,9 @@ repo's own CHANGELOG.md, not here.
 
 ### Changed
 
+- README documents the Renovate setup: `triage` and `triage-action` share
+  one preset, and `triage-action`'s `VERSION` follows `triage` releases;
+  Prerequisites points at `make install-tools` for the pinned golangci-lint.
 - `gh-runs-list` / `gh-runs-watch` / `gh-runs-status` now iterate `REPOS_GH`
   (new manifest variable, alongside `REPOS_FOLLOW_ONLY`) and delegate with
   `--no-print-directory` and `|| true` so one repo's failure never aborts the
